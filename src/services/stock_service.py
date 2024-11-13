@@ -90,10 +90,14 @@ class StockService:
     def _get_scraper_data(
         self, stock_symbol: str
     ) -> tuple[str, list[Competitor], PerformanceData]:
-        scraper = StockScraper(stock_symbol)
         company_name = ""
         competitors: list[Competitor] = []
         performance = PerformanceData()
+        try:
+            scraper = StockScraper(stock_symbol)
+        except ConnectionError as e:
+            logger.error(f"Failed to connect to the external data source: {e}")
+            return company_name, competitors, performance
 
         try:
             company_name = scraper.get_company_name()

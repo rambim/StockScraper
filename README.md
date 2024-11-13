@@ -2,11 +2,7 @@
 
 ### ✒️ Introduction
 This project provides 2 endpoints for buying and retrieving stocks.
-### 🔌 Application Installation
-To install, download the project, and then run the docker command:
-```sh
-docker-compose build --nocache
-```
+
 ### ⚙️ Environment Variables
 
 | Variable           | Description                          |
@@ -20,6 +16,12 @@ docker-compose build --nocache
 | POSTGRES_USER      | Username for PostgreSQL database     |
 | POSTGRES_PASSWORD  | Password for PostgreSQL database     |
 | POSTGRES_DB        | Name of the PostgreSQL database      |
+
+### 🔌 Application Installation
+To install, download the project, create a `.env` file in the root of the project with the environment variables, and then run the docker command:
+```sh
+docker-compose build --no-cache
+```
 
 ### 📀 Start Application
 To start the container, run the command:
