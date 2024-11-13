@@ -43,7 +43,7 @@ def test_post_stock_invalid_symbol():
 
 def test_post_stock_invalid_amount():
     response = client.post(
-        "/api/v1/stock/AAPL",
+        "/api/v1/stock/TEST",
         json={"amount": 0},
     )
     assert response.status_code == 422
@@ -57,7 +57,7 @@ def test_stock_api_not_found(mock_redis_get, mock_get_stock_values):
         status="error", stock_values=StockValues(open=0.0, high=0.0, low=0.0, close=0.0)
     )
 
-    response = client.get("/api/v1/stock/AAPL")
+    response = client.get("/api/v1/stock/TEST")
     assert response.status_code == 200
     assert response.json()["status"] == "error"
     assert response.json()["stock_values"] == {
