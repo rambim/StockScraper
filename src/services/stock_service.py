@@ -1,6 +1,6 @@
 from datetime import datetime
-from typing import List, Optional, Tuple
 
+from fastapi import HTTPException
 from fastapi.logger import logger
 from redis import Redis
 from requests.exceptions import HTTPError
@@ -10,7 +10,6 @@ from src.config.settings import get_settings
 from src.repository.stock_repository import StockRepository
 from src.schemas.stock_schemas import (
     Competitor,
-    ErrorResponseSchema,
     PerformanceData,
     PolygonResponse,
     StockCreateSchema,
@@ -39,18 +38,21 @@ class StockService:
         stock_symbol = stock_symbol.upper()
 
         existing_stock = self.repository.get_by_stock_symbol(stock_symbol)
-        if existing_stock:
-            stock_update_data = StockCreateSchema(
-                purchased_amount=existing_stock.purchased_amount + data.amount,
-                company_code=existing_stock.company_code,
-            )
-            self.repository.update(existing_stock, stock_update_data)
-        else:
-            stock_create_data = StockCreateSchema(
-                purchased_amount=data.amount,
-                company_code=stock_symbol,
-            )
-            self.repository.create(stock_create_data)
+        try:
+            if existing_stock:
+                stock_update_data = StockCreateSchema(
+                    purchased_amount=existing_stock.purchased_amount + data.amount,
+                    company_code=existing_stock.company_code,
+                )
+                self.repository.update(existing_stock, stock_update_data)
+            else:
+                stock_create_data = StockCreateSchema(
+                    purchased_amount=data.amount,
+                    company_code=stock_symbol,
+                )
+                self.repository.create(stock_create_data)
+        except ValueError as e:
+            raise HTTPException(status_code=422, detail=f"{e}")
 
         message = f"{data.amount} units of stock {stock_symbol} were added to your stock record"
         response = StockPurchasedResponseSchema(message=message)
@@ -60,7 +62,7 @@ class StockService:
 
     def get_by_stock_symbol(self, stock_symbol: str) -> StockResponseSchema:
         stock_symbol = stock_symbol.upper()
-    
+
         cached_data = self.redis_client.get(f"{stock_symbol}")
         if cached_data:
             return StockResponseSchema.model_validate_json(cached_data)

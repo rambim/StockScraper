@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from sqlalchemy.orm import Session
 
 from src.config.database import get_db
@@ -16,8 +16,8 @@ router = APIRouter(prefix="/stock", tags=["stock"])
     "/{stock_symbol}", status_code=201, response_model=StockPurchasedResponseSchema
 )
 def purchase_stock(
-    stock_symbol: str,
     data: StockPurchasedRequestSchema,
+    stock_symbol: str = Path(..., max_length=10),
     session: Session = Depends(get_db),
 ) -> StockPurchasedResponseSchema:
     service = StockService(session)
@@ -26,7 +26,7 @@ def purchase_stock(
 
 @router.get("/{stock_symbol}", status_code=200, response_model=StockResponseSchema)
 def get_stocks(
-    stock_symbol: str, session: Session = Depends(get_db)
+    stock_symbol: str = Path(..., max_length=10), session: Session = Depends(get_db)
 ) -> StockResponseSchema:
     service = StockService(session)
     return service.get_by_stock_symbol(stock_symbol)

@@ -43,7 +43,6 @@ class StockScraper:
 
     def get_company_name(self) -> str:
         return self.soup.find("h1", {"class": "company__name"}).get_text(strip=True)
-        
 
     def get_competitors(self) -> list[Competitor]:
         competitors_table = self.soup.find(

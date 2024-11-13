@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import BaseModel, field_validator, validator
 
 
@@ -44,6 +42,12 @@ class StockCreateSchema(BaseModel):
     company_code: str
     purchased_amount: int
 
+    @field_validator("company_code", mode="before")
+    def check_company_code_length(cls, value):
+        if len(value) > 10:
+            raise ValueError("company_code must be 10 characters or less")
+        return value
+
 
 class StockResponseSchema(BaseModel):
     status: str
@@ -52,17 +56,18 @@ class StockResponseSchema(BaseModel):
     company_name: str
     stock_values: StockValues
     performance_data: PerformanceData
-    competitors: List[Competitor]
+    competitors: list[Competitor]
 
 
 class StockPurchasedRequestSchema(BaseModel):
     amount: int
 
+    @field_validator("amount", mode="before")
+    def check_purchased_amount(cls, value):
+        if value <= 0:
+            raise ValueError("amount must be greater than zero")
+        return value
+
 
 class StockPurchasedResponseSchema(BaseModel):
-    message: str
-
-
-class ErrorResponseSchema(BaseModel):
-    code: int
     message: str

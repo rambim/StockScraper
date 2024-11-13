@@ -28,10 +28,30 @@ def test_get_stocks():
     assert data["purchased_amount"] == 10
 
 
+def test_get_stock_invalid_symbol():
+    response = client.get("/api/v1/stock/12345678910")
+    assert response.status_code == 422
+
+
+def test_post_stock_invalid_symbol():
+    response = client.post(
+        "/api/v1/stock/12345678910",
+        json={"amount": 10},
+    )
+    assert response.status_code == 422
+
+
+def test_post_stock_invalid_amount():
+    response = client.post(
+        "/api/v1/stock/AAPL",
+        json={"amount": 0},
+    )
+    assert response.status_code == 422
+
+
 @patch("src.services.stock_service.PolygonAPI.get_stock_values")
 @patch("src.services.stock_service.Redis.get")
 def test_stock_api_not_found(mock_redis_get, mock_get_stock_values):
-
     mock_redis_get.return_value = None
     mock_get_stock_values.return_value = PolygonResponse(
         status="error", stock_values=StockValues(open=0.0, high=0.0, low=0.0, close=0.0)
