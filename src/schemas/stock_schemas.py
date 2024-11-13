@@ -40,7 +40,7 @@ class Competitor(BaseModel):
 
 class StockCreateSchema(BaseModel):
     company_code: str
-    purchased_amount: int
+    purchased_amount: float
 
     @field_validator("company_code", mode="before")
     def check_company_code_length(cls, value):
@@ -51,7 +51,7 @@ class StockCreateSchema(BaseModel):
 
 class StockResponseSchema(BaseModel):
     status: str
-    purchased_amount: int
+    purchased_amount: float
     company_code: str
     company_name: str
     stock_values: StockValues
@@ -60,7 +60,7 @@ class StockResponseSchema(BaseModel):
 
 
 class StockPurchasedRequestSchema(BaseModel):
-    amount: int
+    amount: float
 
     @field_validator("amount", mode="before")
     def check_purchased_amount(cls, value):

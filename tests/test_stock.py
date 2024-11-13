@@ -16,7 +16,7 @@ def test_purchase_stock():
     )
     assert response.status_code == 201
     assert response.json() == {
-        "message": "10 units of stock TEST were added to your stock record"
+        "message": "10.0 units of stock TEST were added to your stock record"
     }
 
 
