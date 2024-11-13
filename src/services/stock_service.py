@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 
 from fastapi import HTTPException
 from fastapi.logger import logger
@@ -41,13 +42,13 @@ class StockService:
         try:
             if existing_stock:
                 stock_update_data = StockCreateSchema(
-                    purchased_amount=existing_stock.purchased_amount + data.amount,
+                    purchased_amount=existing_stock.purchased_amount + Decimal(data.amount),
                     company_code=existing_stock.company_code,
                 )
                 self.repository.update(existing_stock, stock_update_data)
             else:
                 stock_create_data = StockCreateSchema(
-                    purchased_amount=data.amount,
+                    purchased_amount=Decimal(data.amount),
                     company_code=stock_symbol,
                 )
                 self.repository.create(stock_create_data)
