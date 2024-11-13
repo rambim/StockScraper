@@ -18,7 +18,7 @@ This project provides 2 endpoints for buying and retrieving stocks.
 | POSTGRES_DB        | Name of the PostgreSQL database      |
 
 ### 🔌 Application Installation
-To install, download the project, create a `.env` file in the root of the project with the environment variables, and then run the docker command:
+Ensure you have Docker Compose installed. To install, download the project, create a `.env` file in the root of the project with the environment variables, and then run the docker command:
 ```sh
 docker-compose build --no-cache
 ```
@@ -54,6 +54,8 @@ docker exec -ti fastapi_web pytest .
 - [Ruff](https://beta.ruff.rs/docs/)
 - [sqlalchemy-utils](https://sqlalchemy-utils.readthedocs.io/)
 - [HTTPX](https://www.python-httpx.org/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
 ### 🧔 Project Owner
 - Felippe Giuliani
